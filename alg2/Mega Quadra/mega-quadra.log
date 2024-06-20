@@ -1,0 +1,256 @@
+***************************************************
+ARQUIVO DE LOG DO TRABALHO PRATICO 1 - MEGA QUADRA!
+Realizado por Matheus Souza e Bruno Strapasson
+Prof. Elias P. Duarte Jr.
+***************************************************
+
+
+$$ Inicio de um novo jogo $$
+
+Tamanho do vetor escolhido: 10
+Maior valor escolhido: 50
+Tentou escolher um valor invalido: 60
+Valores escolhidos na aposta: 2 34 45 32
+Vetor antes da ordenacao: 19 29 25 43 20 37 2 46 27 24
+Vetor depois da ordenacao: 2 19 20 24 25 27 29 37 43 46
+Acertou o numero 2!
+Foi realizada 1 comparacao com a Busca Sequencial
+Foram realizadas 3 comparacoes com a Busca Binaria
+
+
+Comparacoes e o tempo de execucao de cada algoritmo de ordenacao: 
+Selection Sort: 45 comparacoes em 0.000003 s.
+Bubble Sort: 45 comparacoes em 0.000002 s.
+Quick Sort recursivo: 48 comparacoes em 0.000002 s.
+Quick Sort iterativo: 48 comparacoes em 0.000002 s.
+
+Acertou 1 numero!
+
+
+$$ Inicio de um novo jogo $$
+
+Tamanho do vetor escolhido: 10
+Maior valor escolhido: 300
+Valores escolhidos na aposta: 2 4 1 9
+Vetor antes da ordenacao: 57 282 208 259 26 147 152 25 232 236
+Vetor depois da ordenacao: 25 26 57 147 152 208 232 236 259 282
+
+Comparacoes e o tempo de execucao de cada algoritmo de ordenacao: 
+Selection Sort: 45 comparacoes em 0.000004 s.
+Bubble Sort: 45 comparacoes em 0.000003 s.
+Quick Sort recursivo: 55 comparacoes em 0.000004 s.
+Quick Sort iterativo: 55 comparacoes em 0.000004 s.
+
+Nao acertou nenhum numero.
+
+
+$$ Inicio de um novo jogo $$
+
+Tamanho do vetor escolhido: 6
+Maior valor escolhido: 60
+Valores escolhidos na aposta: 40 55 23 6
+Vetor antes da ordenacao: 46 12 32 15 42 24
+Vetor depois da ordenacao: 12 15 24 32 42 46
+
+Comparacoes e o tempo de execucao de cada algoritmo de ordenacao: 
+Selection Sort: 15 comparacoes em 0.000004 s.
+Bubble Sort: 15 comparacoes em 0.000002 s.
+Quick Sort recursivo: 29 comparacoes em 0.000002 s.
+Quick Sort iterativo: 29 comparacoes em 0.000003 s.
+
+Nao acertou nenhum numero.
+
+
+$$ Inicio de um novo jogo $$
+
+Tamanho do vetor escolhido: 6
+Maior valor escolhido: 10
+Valores escolhidos na aposta: 2 3 4 5
+Vetor antes da ordenacao: 2 10 6 1 8 5
+Vetor depois da ordenacao: 1 2 5 6 8 10
+Acertou o numero 5!
+Foram realizadas 22 comparacoes com a Busca Sequencial
+Foram realizadas 7 comparacoes com a Busca Binaria
+
+
+Comparacoes e o tempo de execucao de cada algoritmo de ordenacao: 
+Selection Sort: 15 comparacoes em 0.000009 s.
+Bubble Sort: 15 comparacoes em 0.000002 s.
+Quick Sort recursivo: 27 comparacoes em 0.000002 s.
+Quick Sort iterativo: 27 comparacoes em 0.000003 s.
+
+Acertou 1 numero!
+
+
+$$ Inicio de um novo jogo $$
+
+Tamanho do vetor escolhido: 4
+Maior valor escolhido: 4
+Valores escolhidos na aposta: 1 2 3 4
+Vetor antes da ordenacao: 4 1 2 3
+Vetor depois da ordenacao: 1 2 3 4
+Acertou o numero 1!
+Foi realizada 1 comparacao com a Busca Sequencial
+Foram realizadas 2 comparacoes com a Busca Binaria
+
+Acertou o numero 2!
+Foram realizadas 3 comparacoes com a Busca Sequencial
+Foram realizadas 3 comparacoes com a Busca Binaria
+
+Acertou o numero 3!
+Foram realizadas 6 comparacoes com a Busca Sequencial
+Foram realizadas 5 comparacoes com a Busca Binaria
+
+Acertou o numero 4!
+Foram realizadas 10 comparacoes com a Busca Sequencial
+Foram realizadas 8 comparacoes com a Busca Binaria
+
+
+Comparacoes e o tempo de execucao de cada algoritmo de ordenacao: 
+Selection Sort: 6 comparacoes em 0.000004 s.
+Bubble Sort: 6 comparacoes em 0.000002 s.
+Quick Sort recursivo: 14 comparacoes em 0.000002 s.
+Quick Sort iterativo: 14 comparacoes em 0.000002 s.
+
+Acertou 4 numeros!
+
+
+$$ Inicio de um novo jogo $$
+
+Tamanho do vetor escolhido: 5
+Maior valor nao pode ser menor que o tamanho. Tentou um valor invalido: 5
+Maior valor escolhido: 10
+Valores escolhidos na aposta: 1 2 3 4
+Vetor antes da ordenacao: 7 3 8 2 6
+Vetor depois da ordenacao: 2 3 6 7 8
+Acertou o numero 3!
+Foram realizadas 13 comparacoes com a Busca Sequencial
+Foram realizadas 6 comparacoes com a Busca Binaria
+
+
+Comparacoes e o tempo de execucao de cada algoritmo de ordenacao: 
+Selection Sort: 10 comparacoes em 0.000004 s.
+Bubble Sort: 10 comparacoes em 0.000002 s.
+Quick Sort recursivo: 20 comparacoes em 0.000002 s.
+Quick Sort iterativo: 20 comparacoes em 0.000003 s.
+
+Acertou 1 numero!
+
+
+$$ Inicio de um novo jogo $$
+
+Tamanho do vetor escolhido: 5
+Maior valor escolhido: 8
+Valores escolhidos na aposta: 1 2 3 4
+Vetor antes da ordenacao: 2 1 6 4 3
+Vetor depois da ordenacao: 1 2 3 4 6
+Acertou o numero 1!
+Foi realizada 1 comparacao com a Busca Sequencial
+Foram realizadas 2 comparacoes com a Busca Binaria
+
+Acertou o numero 3!
+Foram realizadas 9 comparacoes com a Busca Sequencial
+Foram realizadas 6 comparacoes com a Busca Binaria
+
+
+Comparacoes e o tempo de execucao de cada algoritmo de ordenacao: 
+Selection Sort: 10 comparacoes em 0.000003 s.
+Bubble Sort: 10 comparacoes em 0.000001 s.
+Quick Sort recursivo: 19 comparacoes em 0.000001 s.
+Quick Sort iterativo: 19 comparacoes em 0.000001 s.
+
+Acertou 2 numeros!
+
+
+$$ Inicio de um novo jogo $$
+
+Tamanho do vetor escolhido: 6
+Maior valor escolhido: 60
+Tentou escolher um valor invalido: 77
+Tentou escolher um numero repetido: 8
+Valores escolhidos na aposta: 3 5 8 43
+Vetor antes da ordenacao: 46 41 26 4 32 22
+Vetor depois da ordenacao: 4 22 26 32 41 46
+
+Comparacoes e o tempo de execucao de cada algoritmo de ordenacao: 
+Selection Sort: 15 comparacoes em 0.002581 s.
+Bubble Sort: 15 comparacoes em 0.002054 s.
+Quick Sort recursivo: 29 comparacoes em 0.000452 s.
+Quick Sort iterativo: 29 comparacoes em 0.003204 s.
+
+Nao acertou nenhum numero.
+
+
+$$ Inicio de um novo jogo $$
+
+Tamanho do vetor escolhido: 5
+Maior valor escolhido: 7
+Valores escolhidos na aposta: 1 2 3 4
+Vetor antes da ordenacao: 7 5 4 6 2
+Vetor depois da ordenacao: 2 4 5 6 7
+Acertou o numero 2!
+Foram realizadas 7 comparacoes com a Busca Sequencial
+Foram realizadas 4 comparacoes com a Busca Binaria
+
+Acertou o numero 4!
+Foram realizadas 15 comparacoes com a Busca Sequencial
+Foram realizadas 10 comparacoes com a Busca Binaria
+
+
+Comparacoes e o tempo de execucao de cada algoritmo de ordenacao: 
+Selection Sort: 10 comparacoes em 0.002866 s.
+Bubble Sort: 10 comparacoes em 0.002184 s.
+Quick Sort recursivo: 19 comparacoes em 0.000569 s.
+Quick Sort iterativo: 19 comparacoes em 0.003256 s.
+
+Acertou 2 numeros!
+
+
+$$ Inicio de um novo jogo $$
+
+Tamanho do vetor escolhido: 5
+Maior valor escolhido: 5
+Valores escolhidos na aposta: 1 2 3 4
+Vetor antes da ordenacao: 1 3 5 2 4
+Vetor depois da ordenacao: 1 2 3 4 5
+Acertou o numero 3!
+Foram realizadas 13 comparacoes com a Busca Sequencial
+Foram realizadas 6 comparacoes com a Busca Binaria
+
+Acertou o numero 4!
+Foram realizadas 15 comparacoes com a Busca Sequencial
+Foram realizadas 7 comparacoes com a Busca Binaria
+
+
+Comparacoes e o tempo de execucao de cada algoritmo de ordenacao: 
+Selection Sort: 10 comparacoes em 0.000024 s.
+Bubble Sort: 10 comparacoes em 0.000014 s.
+Quick Sort recursivo: 20 comparacoes em 0.000020 s.
+Quick Sort iterativo: 20 comparacoes em 0.000761 s.
+
+Acertou 2 numeros!
+
+
+$$ Inicio de um novo jogo $$
+
+Tamanho do vetor escolhido: 5
+Maior valor escolhido: 5
+Valores escolhidos na aposta: 1 2 3 4
+Vetor antes da ordenacao: 2 4 5 1 3
+Vetor depois da ordenacao: 1 2 3 4 5
+Acertou o numero 3!
+Foram realizadas 13 comparacoes com a Busca Sequencial
+Foram realizadas 5 comparacoes com a Busca Binaria
+
+Acertou o numero 4!
+Foram realizadas 17 comparacoes com a Busca Sequencial
+Foram realizadas 7 comparacoes com a Busca Binaria
+
+
+Comparacoes e o tempo de execucao de cada algoritmo de ordenacao: 
+Selection Sort: 10 comparacoes em 0.000012 s.
+Bubble Sort: 10 comparacoes em 0.000009 s.
+Quick Sort recursivo: 21 comparacoes em 0.000012 s.
+Quick Sort iterativo: 21 comparacoes em 0.000025 s.
+
+Acertou 2 numeros!
