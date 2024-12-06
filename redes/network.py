@@ -182,8 +182,8 @@ def ring_messages(CURRENT_NODE_ADDRESS, NEXT_NODE_ADDRESS, game, socket_receiver
         socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
         return 2 # Continua o funcionamento da rede
     # Mostra todos os palpites feitos
-    elif packet.message_type == "SHOW-GUESSES":
-        player.show_guesses(packet.message)
+    elif packet.message_type == "SHOW-PONTOS":
+        player.show_points(packet.message)
         packet.verifier[player.index] = True # Marca que a mensagem foi recebida
         socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
         return 2 # Continua o funcionamento da rede
@@ -197,7 +197,7 @@ def ring_messages(CURRENT_NODE_ADDRESS, NEXT_NODE_ADDRESS, game, socket_receiver
         return 2 # Continua o funcionamento da rede
     # Mostra as cartas jogadas
     elif packet.message_type == "SHOW-CARDS":
-        player.show_cards(packet.message)
+        player.show_points(packet.message)
         packet.verifier[player.index] = True
         socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
         return 2 # Continua o funcionamento da rede
@@ -208,6 +208,7 @@ def ring_messages(CURRENT_NODE_ADDRESS, NEXT_NODE_ADDRESS, game, socket_receiver
         socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
     # Recebe as informações sobre o fim da rodada
     elif packet.message_type == "END-OF-ROUND":
+        player.reset_cards()
         game.end_of_round()
         packet.verifier[player.index] = True # Marca que a mensagem foi recebida
         socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
@@ -228,7 +229,8 @@ def ring_messages(CURRENT_NODE_ADDRESS, NEXT_NODE_ADDRESS, game, socket_receiver
         if packet.verifier[player.index]:
             return 2  # Já processado
         action = player.player_action(game)  # Jogador escolhe "hit" ou "stand"
-        packet.message[player.index] = action
+        game.set_points_played(packet.message, action, player.index)
+        packet.message[player.index] = game.get_points_played()
         packet.verifier[player.index] = True
         socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
         return 2
@@ -238,7 +240,7 @@ def ring_messages(CURRENT_NODE_ADDRESS, NEXT_NODE_ADDRESS, game, socket_receiver
         if packet.verifier[player.index]:
             return 2  # Já processado
         if player.index == game.state["dealer"]:  # O dealer joga
-            game.dealer_play()
+            #game.dealer_play()
             packet.message = game.get_dealer_hand()
         packet.verifier[player.index] = True
         socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
