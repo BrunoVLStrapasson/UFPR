@@ -1,22 +1,4 @@
-# ALTERAR PARA Q A ORDEM DE ANÁLISE COMECE SEMPRE PELO CARTEADOR
 import random 
-
-# class Game:
-#     def __init__(self):
-#         self.n_players = 4
-#         self.state = {
-#             'deck' : [],
-#             'round' : 1,
-#             'n_sub_rounds' : 0,
-#             'n_sub_rounds' : 0,
-#             'current_dealer' : None,
-#             'players_lifes' : [3, 3, 3, 3],
-#             'players_alive': [True, True, True, True],
-#             'guesses' : [None, None, None, None],
-#             'cards_played' : [None, None, None, None],
-#             'points' : [0, 0, 0, 0],
-#             'vira' : None,
-#         }
 
 class Game:
     def __init__(self):
@@ -36,14 +18,9 @@ class Game:
     def assign_dealer(self):
         # Defina um jogador como o dealer
         self.state['dealer'] = 0  # Por exemplo, o primeiro jogador é o dealer
-        # Você pode mudar isso conforme as regras do jogo
     
     def __str__(self):
         return f"Deck: {self.state['deck']}, Round: {self.state['round']}, Current Dealer: {self.state['current_dealer']}, Player Lifes: {self.state['players_lifes']}, Players Alive: {self.state['players_alive']}, Guesses: {self.state['guesses']}, Points: {self.state['points']}, Vira: {self.state['vira']}"
-
-    # Carrega os guesses
-    def load_guesses(self, guesses):
-        self.state['guesses'] = guesses 
 
     def set_round(self, round):
         self.state['round'] = round
@@ -56,6 +33,10 @@ class Game:
 
     def get_points_played(self):  
         return self.state['points_played']
+    
+    # Carrega os guesses
+    def load_guesses(self, guesses):
+        self.state['guesses'] = guesses 
 
     # Soma o n de subrodadas
     def increment_sub_rounds(self):
@@ -144,8 +125,7 @@ class Game:
             else: # Se o jogador não estiver vivo, ele não recebe cartas
                 g_cards[i] = None
         self.state['vira'] = self.state['deck'].pop() # Vira é a última carta removida do baralho
-        return g_cards
-    
+        return g_cards 
         
     # Embaralha o baralho
     def shuffle_deck(self):
@@ -153,32 +133,29 @@ class Game:
 
     def load_points(self, points):
         self.state['points'] = points
-
-
-    # Embuchadas:
-    def embuchadas(self, cards_played):
-        for i in range(self.n_players):
-            for j in range(i+1, self.n_players):
-                if cards_played[i][0] == cards_played[j][0]:
-                    return i, j
     
     # Contabiliza as cartas jogadas
     def end_of_sub_round(self):
-        print("\n--- Fim da Rodada ---")
-        print(self.state['points_played'])
+        print("\n-------- Fim da Rodada --------\n")
+        print(" Pontos totais de cada jogador:")
+        print(f"      {self.state['points_played']}")
         
         dealer_index = self.state['dealer']
         dealer_points = self.state['points_played'][dealer_index]  # Pontos do dealer
-        print(f"\nDealer: {dealer_points} self.['points_played']")
+        #print(f"\nDealer: {dealer_points} pontos. ")
 
         winners = ['dealer' if i == dealer_index else None for i in range(self.n_players)]
+
+        if dealer_points > 21:
+            winners = ['dealer','empatou','empatou','empatou']
+            return winners
 
         for i in range(self.n_players):
             if i == dealer_index or not self.state['players_alive'][i]:
                 continue
 
             player_points = self.state['points_played'][i]
-            print('points_played'[i])
+            #print('points_played'[i])
             if player_points > dealer_points and player_points <= 21:
                 print(f"Jogador {i} venceu o Dealer!")
                 winners[i] = 'ganhou'
@@ -255,8 +232,9 @@ class Game:
         return new_dealer
 
     # Mata um jogador
-    def kill_player(self, index):
-        self.state['players_alive'][index] = False
+    def kill_player(self, cash):
+        if cash == 0:
+            self.state['players_alive'][cash] = False
     
     def check_winner(self, players):
         # Retorna o vencedor com maior pontuação ≤ 21
@@ -273,10 +251,10 @@ class Game:
         #self.state['bets'] = [0] * self.n_players  # Reseta as apostas
         #self.state['deck'] = self.initialize_deck()  # Recria o baralho
         #self.shuffle_deck()  # Embaralha o baralho
-        self.state['round'] += 1  # Incrementa o número da rodada
+        #self.state['round'] += 1  # Incrementa o número da rodada
         self.state['n_sub_rounds'] = 0
-        self.state['dealer'] = self.next_dealer()  # Escolhe o próximo dealer
-        print(f"Novo dealer: Jogador {self.state['dealer']}")
+        #self.state['dealer'] = self.next_dealer()  # Escolhe o próximo dealer
+        #print(f"Novo dealer: Jogador {self.state['dealer']}")
 
     
     def reset_points(self):

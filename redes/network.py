@@ -169,7 +169,7 @@ def ring_messages(CURRENT_NODE_ADDRESS, NEXT_NODE_ADDRESS, game, socket_receiver
         return 2 # Continua o funcionamento da rede
     # CARTAS enviadas pelo dealer
     elif packet.message_type == "CARDS": 
-        print(f"player.index: {player.index}")
+        #print(f"player.index: {player.index}")
         player.set_cards(packet.message[player.index])
         packet.verifier[player.index] = True # Marca que a mensagem foi recebida
         socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
@@ -198,6 +198,11 @@ def ring_messages(CURRENT_NODE_ADDRESS, NEXT_NODE_ADDRESS, game, socket_receiver
     # Mostra as cartas jogadas
     elif packet.message_type == "SHOW-CARDS":
         player.show_points(packet.message)
+        packet.verifier[player.index] = True
+        socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
+        return 2 # Continua o funcionamento da rede
+    elif packet.message_type == "CONTABILIZA":
+        player.retorna_guess(packet.message)
         packet.verifier[player.index] = True
         socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
         return 2 # Continua o funcionamento da rede
