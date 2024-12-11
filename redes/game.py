@@ -1,29 +1,53 @@
+# Jogo black jack desenvolvido numa rede em anel, disciplina redes1
+# Bruno Vila Lobus Strapasson - GRR20215522
+# Vinicius de Paula - GRR20190360
+
 import random 
 
 class Game:
     def __init__(self):
-        self.n_players = 4  # Número de jogadores, por exemplo
+        self.n_players = 4  # Número de jogadores
         self.state = {
             'round': 1,  # Rodada inicial
             'dealer': 0,  # Índice do dealer
             'players_alive': [True,True,True,True],  # Status de jogadores
             'players_lifes' : [1, 1, 1, 1],
             'deck': [],  # Mãos dos jogadores
-            'n_sub_rounds' : 0,
             'guesses': [0,0,0,0],  # Apostas dos jogadores
             'points_played' : [0,0,0,0],
-            # Adicione outras chaves relevantes aqui
         }
 
-    def assign_dealer(self):
-        # Defina um jogador como o dealer
-        self.state['dealer'] = 0  # Por exemplo, o primeiro jogador é o dealer
-    
     def __str__(self):
-        return f"Deck: {self.state['deck']}, Round: {self.state['round']}, Current Dealer: {self.state['current_dealer']}, Player Lifes: {self.state['players_lifes']}, Players Alive: {self.state['players_alive']}, Guesses: {self.state['guesses']}, Points: {self.state['points']}, Vira: {self.state['vira']}"
+        return f"Round: {self.state['round']}, Deck: {self.state['deck']}, Player Lifes: {self.state['players_lifes']}, Players Alive: {self.state['players_alive']}, Guesses: {self.state['guesses']}, Points_played: {self.state['points']}, Dealer: {self.state['dealer']}"
+
+    def set_points_played(self, points_played, point, index):
+
+        # Certifica-se de que `points_played` seja uma lista simples
+        if not isinstance(self.state['points_played'], list) or len(self.state['points_played']) != self.n_players:
+            self.state['points_played'] = [0] * self.n_players
+
+        # Atualiza o índice específico com o valor fornecido
+        self.state['points_played'] = point
+    
+    def set_card_played(self, cards_played, card, index):
+        cards_played[index] = card
+        self.state['cards_played'] = cards_played
+
+    def set_cards_played(self, cards_played):
+        self.state['cards_played'] = cards_played
+
+    # Atribui o dealer atual
+    def set_current_dealer(self, dealer):
+        self.state['current_dealer'] = dealer
+
+    def set_state(self, state):
+        self.state = state
 
     def set_round(self, round):
         self.state['round'] = round
+
+    def set_players_lifes(self, index):
+        self.state['players_lifes'][index] = 0
     
     def get_round(self):
         return self.state['round']
@@ -34,64 +58,34 @@ class Game:
     def get_points_played(self):  
         return self.state['points_played']
     
+    def get_players_lifes(self):  
+        return self.state['players_lifes']
+  
+    def get_state(self):
+        return self.state   
+
+    def get_cards_played(self):
+        return self.state['cards_played']   
+
     # Carrega os guesses
     def load_guesses(self, guesses):
         self.state['guesses'] = guesses 
-
-    # Soma o n de subrodadas
-    def increment_sub_rounds(self):
-        self.state['n_sub_rounds'] += 1
 
     # Soma o n de rounds
     def increment_round(self):
         self.state['round'] += 1
 
-    # Reseta o número de subrodadas
-    def reset_sub_rounds(self):
-        self.state['n_sub_rounds'] = 0
-
     # Reseta os palpites
     def reset_guesses(self):
         self.state['guesses'] = [None, None, None, None]
 
-    # Atribui o dealer atual
-    def set_current_dealer(self, dealer):
-        self.state['current_dealer'] = dealer
-
-    def set_state(self, state):
-        self.state = state
-    
-    def get_state(self):
-        return self.state
-    
-    def set_card_played(self, cards_played, card, index):
-        cards_played[index] = card
-        self.state['cards_played'] = cards_played
-
-    def set_points_played(self, points_played, point, index):
-
-        # Certifica-se de que `points_played` seja uma lista simples
-        if not isinstance(self.state['points_played'], list) or len(self.state['points_played']) != self.n_players:
-            self.state['points_played'] = [0] * self.n_players
-
-        # Atualiza o índice específico com o valor fornecido
-        self.state['points_played'] = point
-
-
-    def set_cards_played(self, cards_played):
-        self.state['cards_played'] = cards_played
-
-    def get_cards_played(self):
-        return self.state['cards_played']
+    def assign_dealer(self):
+        # Defina um jogador como o dealer
+        self.state['dealer'] = 0  # Por exemplo, o primeiro jogador é o dealer    
      
     def reset_card_played(self):
         self.state['cards_played'] = [None, None, None, None]
-
-    # Inicilializa o baralho
-    def initialize_deck(self):
-            # Cria um baralho de 10 valores (1-10)
-            self.state['deck'] = [value for value in range(1, 13)] * 4  # 4 naipes (ignorados)
-        
+     
     def calculate_hand_value(self, hand):
             value = 0
             aces = 0
@@ -108,6 +102,11 @@ class Game:
                 value -= 10
                 aces -= 1
             return value
+
+    # Inicilializa o baralho
+    def initialize_deck(self):
+            # Cria um baralho de 10 valores (1-10)
+            self.state['deck'] = [value for value in range(1, 13)] * 4  # 4 naipes (ignorados)
 
     def draw_cards(self):
         n_players_alive = self.state['players_alive'].count(True)
@@ -127,12 +126,36 @@ class Game:
         self.state['vira'] = self.state['deck'].pop() # Vira é a última carta removida do baralho
         return g_cards 
         
+    def load_points(self, points):
+        self.state['points'] = points
+
     # Embaralha o baralho
     def shuffle_deck(self):
         random.shuffle(self.state['deck'])
 
-    def load_points(self, points):
-        self.state['points'] = points
+    # Mata um jogador
+    def kill_player(self, index):
+        self.set_players_lifes(index)
+        print(self.state['players_lifes'])
+    
+    def check_winner(self, players):
+        # Retorna o vencedor com maior pontuação ≤ 21
+        scores = [(i, self.calculate_hand_value(player.cards)) for i, player in enumerate(players)]
+        scores = [(i, score) for i, score in scores if score <= 21]
+        if scores:
+            return max(scores, key=lambda x: x[1])[0]  # Retorna índice do vencedor
+        return None  # Todos perderam                   
+    
+    def reset_points(self):
+        self.state['points'] = [0, 0, 0, 0]
+
+    def update_player_points(self):
+            # Atualiza os self.['points_played'] de todos os jogadores
+            for i in range(self.n_players):
+                if self.state['players_alive'][i]:  # Se o jogador estiver vivo
+                    # Aqui você calcula o valor das cartas do jogador (supondo que 'cards' sejam as cartas)
+                    # Como você não possui um vetor de jogadores, vamos supor que as cartas estão em state['deck'][i]
+                    self.state['points'][i] = self.calculate_hand_value(self.state['deck'][i])  # Atualiza os self.['points_played']
     
     # Contabiliza as cartas jogadas
     def end_of_sub_round(self):
@@ -231,74 +254,3 @@ class Game:
         
         return new_dealer
 
-    # Mata um jogador
-    def kill_player(self, cash):
-        if cash == 0:
-            self.state['players_alive'][cash] = False
-    
-    def check_winner(self, players):
-        # Retorna o vencedor com maior pontuação ≤ 21
-        scores = [(i, self.calculate_hand_value(player.cards)) for i, player in enumerate(players)]
-        scores = [(i, score) for i, score in scores if score <= 21]
-        if scores:
-            return max(scores, key=lambda x: x[1])[0]  # Retorna índice do vencedor
-        return None  # Todos perderam                   
-    
-
-    def reset_round(self):
-        print("Preparando para a próxima rodada...")
-        self.state['deck'] = [[] for _ in range(self.n_players)]  # Limpa as mãos dos jogadores
-        #self.state['bets'] = [0] * self.n_players  # Reseta as apostas
-        #self.state['deck'] = self.initialize_deck()  # Recria o baralho
-        #self.shuffle_deck()  # Embaralha o baralho
-        #self.state['round'] += 1  # Incrementa o número da rodada
-        self.state['n_sub_rounds'] = 0
-        #self.state['dealer'] = self.next_dealer()  # Escolhe o próximo dealer
-        #print(f"Novo dealer: Jogador {self.state['dealer']}")
-
-    
-    def reset_points(self):
-        self.state['points'] = [0, 0, 0, 0]
-
-    def update_player_points(self):
-            # Atualiza os self.['points_played'] de todos os jogadores
-            for i in range(self.n_players):
-                if self.state['players_alive'][i]:  # Se o jogador estiver vivo
-                    # Aqui você calcula o valor das cartas do jogador (supondo que 'cards' sejam as cartas)
-                    # Como você não possui um vetor de jogadores, vamos supor que as cartas estão em state['deck'][i]
-                    self.state['points'][i] = self.calculate_hand_value(self.state['deck'][i])  # Atualiza os self.['points_played']
-
-            
-    """def end_of_round(self,self.['points_played']):
-        print("\n--- Fim da Rodada ---")
-        
-        # Exibe os self.['points_played'] de todos os jogadores
-        #print("Pontos dos jogadores:")
-        #for i in range(self.n_players):
-        #    if self.state['players_alive'][i]:
-        #        print(f"Jogador {i}: {self.state['points'][i]} self.['points_played']")
-        #    else:
-        #        print(f"Jogador {i}: eliminado (Bust)")
-
-        # Determina o vencedor
-        dealer_index = self.state['dealer']
-        dealer_points = self.state['points'][dealer_index]
-        print(f"\nDealer: {dealer_points} self.['points_played']")
-
-        winner = None
-        for i in range(self.n_players):
-            if i == dealer_index or not self.state['players_alive'][i]:
-                continue
-            if self.['points_played'][i] > dealer_points and self.state['points'][i] <= 21:
-                winner = i
-                print(f"Jogador {i} venceu o Dealer!")
-            elif self.state['points'][i] == dealer_points:
-                print(f"Jogador {i} empatou com o Dealer.")
-            else:
-                print(f"Jogador {i} perdeu para o Dealer.")
-
-        if winner is None:
-            print("\nDealer venceu a rodada.")
-        else:
-            print(f"\nJogador {winner} é o vencedor da rodada.")
-    """

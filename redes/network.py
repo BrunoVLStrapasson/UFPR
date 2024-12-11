@@ -1,13 +1,42 @@
-import pickle # Biblioteca para serialização de objetos
-from packet import BroadcastPacket, UnicastPacket
+# Jogo black jack desenvolvido numa rede em anel, disciplina redes1
+# Bruno Vila Lobus Strapasson - GRR20215522
+# Vinicius de Paula - GRR20190360
+
+import pickle 
 import sys
 
-# Máquinas do DINF
+
+class Packet:
+    def __init__(self, sender, message_type, message, verifier=False):
+        self.sender = sender  # Quem envia a mensagem
+        self.message_type = message_type  # Tipo da mensagem
+        self.message = message  # Mensagem
+        self.verifier = verifier  # Verificador de recebimento
+
+    def __str__(self):
+        return f"Sender: {self.sender}, Type: {self.message_type}, Message: {self.message}, Verifier: {self.verifier}"
+
+class BroadcastPacket(Packet): 
+    def __init__(self, sender, message_type, message, verifier=[False, False, False, False]):
+        super().__init__(sender, message_type, message, verifier)
+
+    def __str__(self):
+        return f"Broadcast -> {super().__str__()}"
+
+class UnicastPacket(Packet):
+    def __init__(self, sender, dest, message_type, message, verifier=False):
+        super().__init__(sender, message_type, message, verifier)
+        self.dest = dest  # Para quem a mensagem está sendo enviada
+
+    def __str__(self):
+        return f"Unicast -> {super().__str__()}, Dest: {self.dest}"
+
+# DINF
 #NETWORK_ADDRESSES = [
-#    (("10.254.224.56", 21254), 0), # 0 # i29
-#    (("10.254.224.57", 21255), 1), # 1 # i30
-#    (("10.254.224.58", 21256), 2), # 2 # i31 
-#    (("10.254.224.59", 21257), 3)  # 3 # i32
+#    (("10.254.224.56", 21254), 0), # 0 
+#    (("10.254.224.57", 21255), 1), # 1 
+#    (("10.254.224.58", 21256), 2), # 2 
+#    (("10.254.224.59", 21257), 3)  # 3
 #]
 
 # Local
@@ -130,37 +159,36 @@ def ring_messages(CURRENT_NODE_ADDRESS, NEXT_NODE_ADDRESS, game, socket_receiver
             return 2 # Continua o funcionamento da rede
     
     # Tratamento das mensagens de broadcast:
-
     # Se algum nodo anterior não verificou a mensagem, reenvia até o nodo com o bastão para ele reenviar a mensagem
     if verify_verifiers(packet, CURRENT_NODE_ADDRESS[1]) == False:
         socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
         return 2 # Continua o funcionamento da rede
-    # Se a mensagem já foi recebida:
-    elif packet.verifier[player.index] == True:
-        return 2 # Continua o funcionamento da rede
-    # EMPATE
-    elif packet.message_type == "TIE":
-        player.all_losers()
-        packet.verifier[player.index] = True # Marca que a mensagem foi recebida
-        socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
-        return 0 # termina o jogo
-    # VENCEDOR
-    elif packet.message_type == "WINNER":
-        player.game_winner(packet.message) # Verifica o vencedor
-        packet.verifier[player.index] = True # Marca que a mensagem foi recebida
-        socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
-        return 0 # termina o jogo
-    # Se o jogador foi eliminado, só repassa a mensagem
-    elif game.state["players_alive"][player.index] == False:
-        print(f"Você foi eliminado ...")
+    # Recebe o estado do jogo
+    # Ação do jogador
+    elif packet.message_type == "PLAYER-ACTION":
+        if packet.verifier[player.index]:
+            return 2  # Já processado
+        action = player.player_action(game)  # Jogador escolhe "hit" ou "stand"
+        game.set_points_played(packet.message, action, player.index)
+        packet.message[player.index] = game.get_points_played()
         packet.verifier[player.index] = True
         socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
-        return 2 # Continua o funcionamento da rede
-    # Recebe o estado do jogo
+        return 2
+    # Ação do dealer
+    elif packet.message_type == "DEALER-ACTION":
+        if packet.verifier[player.index]:
+            return 2  # Já processado
+        if player.index == game.state["dealer"]:  # O dealer joga
+            #game.dealer_play()
+            packet.message = game.get_dealer_hand()
+        packet.verifier[player.index] = True
+        socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
+        return 2
+    # estado do jgo
     elif packet.message_type == "GAME-STATE":
         game.set_state(packet.message)
         if game.state["players_alive"][player.index] == True:
-            print(f"-----------------RODADA {game.state['round']}-----------------")
+            print(f"\nROUND : {game.state['round']}\n")
             #player.set_vira(packet.message['vira'])
         else:
             print(f"Você foi eliminado ...")
@@ -201,7 +229,7 @@ def ring_messages(CURRENT_NODE_ADDRESS, NEXT_NODE_ADDRESS, game, socket_receiver
         packet.verifier[player.index] = True
         socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
         return 2 # Continua o funcionamento da rede
-    elif packet.message_type == "CONTABILIZA":
+    elif packet.message_type == "CONTABILIZE":
         player.retorna_guess(packet.message)
         packet.verifier[player.index] = True
         socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
@@ -212,51 +240,19 @@ def ring_messages(CURRENT_NODE_ADDRESS, NEXT_NODE_ADDRESS, game, socket_receiver
         packet.verifier[player.index] = True
         socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
     # Recebe as informações sobre o fim da rodada
-    elif packet.message_type == "END-OF-ROUND":
-        player.reset_cards()
-        game.end_of_round()
+    elif packet.message_type == "CASH-AVAL":
+        cash = player.get_cash()
+        if cash == 0:
+            player.set_lifes(player.index)
         packet.verifier[player.index] = True # Marca que a mensagem foi recebida
         socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
         return 2 # Continua o funcionamento da rede
-        # **Distribuição inicial de cartas**
-    ##adicionei aqui
-    elif packet.message_type == "DEAL-CARDS":
+    elif packet.message_type == "END-CONNECTION":
         if packet.verifier[player.index]:
             return 2  # Já processado
-        player.set_cards(packet.message[player.index])  # Configura as cartas do jogador
-        print(f"Sua mão inicial: {player.cards}")
+        print("Recebida mensagem de encerramento. Fechando conexão...")
         packet.verifier[player.index] = True
         socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
-        return 2
-
-    # **Ação do jogador**
-    elif packet.message_type == "PLAYER-ACTION":
-        if packet.verifier[player.index]:
-            return 2  # Já processado
-        action = player.player_action(game)  # Jogador escolhe "hit" ou "stand"
-        game.set_points_played(packet.message, action, player.index)
-        packet.message[player.index] = game.get_points_played()
-        packet.verifier[player.index] = True
-        socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
-        return 2
-
-    # **Ação do dealer**
-    elif packet.message_type == "DEALER-ACTION":
-        if packet.verifier[player.index]:
-            return 2  # Já processado
-        if player.index == game.state["dealer"]:  # O dealer joga
-            #game.dealer_play()
-            packet.message = game.get_dealer_hand()
-        packet.verifier[player.index] = True
-        socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
-        return 2
-
-    # **Resultados do jogo**
-    elif packet.message_type == "RESET":
-        if packet.verifier[player.index]:
-            return 2  # Já processado
-        game.reset_round()
-        game.reset_points()
-        packet.verifier[player.index] = True
-        socket_sender.sendto(pickle.dumps(packet), NEXT_NODE_ADDRESS[0])
-        return 0  # Finaliza o jogo
+        socket_receiver.close()
+        sys.exit()
+        return 2  # Finaliza o jogo
